@@ -1,0 +1,10 @@
+flask
+flask-cors
+requests
+gevent
+fastapi
+
+flask-pymongo
+pymongo
+
+rpi_ws281x
