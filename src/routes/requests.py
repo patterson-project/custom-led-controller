@@ -26,16 +26,16 @@ async def strip_off():
 @router.post(
     path="/temperature", summary="Setting a temperature", response_description="Temperature Set"
 )
-async def strip_set_temperature(temperature: TemperatureDto):
-    await led_strip.temperature(temperature=int(temperature))
+async def strip_set_temperature(temperature_dto: TemperatureDto):
+    await led_strip.temperature(temperature_dto.temperature)
     return Response(status_code=200)
 
 
 @router.post(
     path="/hsv", summary="Setting a HSV", response_description="HSV Set"
 )
-async def strip_set_Hsv(hsv: HsvDto):
-    await led_strip.hsv(hsv.h, hsv.s, hsv.v)
+async def strip_set_Hsv(hsv_dto: HsvDto):
+    await led_strip.hsv(hsv_dto.h, hsv_dto.s, hsv_dto.v)
     return Response(status_code=200)
 
 
