@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Response
+
+from models.dtos import BrightnessDto, HsvDto, OperationDto, TemperatureDto
 from utils.ledstrip import LedStripController
-from models.dtos import BrightnessDto, HSVDto, TemperatureDto, OperationDto
 
 led_strip: LedStripController = LedStripController()
 router = APIRouter()
@@ -10,7 +11,7 @@ router = APIRouter()
     path="/on", summary="Turning on the LED Strip"
 )
 async def strip_on():
-    led_strip.on
+    led_strip.on()
     return Response(status_code=200)
 
 
@@ -18,7 +19,7 @@ async def strip_on():
     path="/off", summary="Turning off the LED Strip"
 )
 async def strip_off():
-    led_strip.off
+    led_strip.off()
     return Response(status_code=200)
 
 
@@ -33,8 +34,8 @@ async def strip_set_temperature(temperature: TemperatureDto):
 @router.post(
     path="/hsv", summary="Setting a HSV", response_description="HSV Set"
 )
-async def strip_set_HSV(HSV: HSVDto):
-    led_strip.hsv(h=HSV.h, s=HSV.s, v=HSV.v)
+async def strip_set_Hsv(Hsv: HsvDto):
+    led_strip.hsv(h=Hsv.h, s=Hsv.s, v=Hsv.v)
     return Response(status_code=200)
 
 
@@ -51,11 +52,11 @@ async def strip_set_brightness(brightness: BrightnessDto):
 )
 async def strip_operation(operation: OperationDto):
     if operation == "rainbow":
-        led_strip.rainbow
+        led_strip.rainbow()
         return Response(status_code=200)
 
     if operation == "rainbow_cycle":
-        led_strip.rainbow_cycle
+        led_strip.rainbow_cycle()
         return Response(status_code=200)
 
     if operation == "rainbow_cycle_loop":

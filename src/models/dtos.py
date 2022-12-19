@@ -1,9 +1,10 @@
 from pydantic import BaseModel
 
+
 class BrightnessDto(BaseModel):
     brightness: int
 
-class HSVDto(BaseModel):
+class HsvDto(BaseModel):
     h: int
     s: int
     v: int

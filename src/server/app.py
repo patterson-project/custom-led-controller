@@ -1,5 +1,6 @@
 from fastapi import FastAPI
-from routes.request import router as CustomLedStripRequestRouter
+
+from src.routes.requests import router as CustomLedStripRequestRouter
 
 app = FastAPI(
     title="Custom Led Strip API",
@@ -9,7 +10,7 @@ app = FastAPI(
 )
 
 app.include_router(
-    CustomLedStripRequestRouter, tags=["Custom Led Strip Requests"], prefix="/request"  
+    CustomLedStripRequestRouter, tags=["Custom Led Strip Requests"] 
 )
 
 @app.get("/healthz", tags=["Health"])
