@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Response
+from fastapi import APIRouter, HTTPException, Response
 
 from models.dtos import BrightnessDto, HsvDto, OperationDto, TemperatureDto
 from utils.ledstrip import LedStripController
@@ -50,24 +50,21 @@ async def strip_set_brightness(brightness: BrightnessDto):
 @router.post(
     path="/operation", summary="Setting a special operation", response_description="Operation Set"
 )
-async def strip_operation(operation: OperationDto):
-    if operation == "rainbow":
-        led_strip.rainbow()
-        return Response(status_code=200)
-
-    if operation == "rainbow_cycle":
-        led_strip.rainbow_cycle()
-        return Response(status_code=200)
-
+async def strip_operation(self, operation_request: OperationDto):
+    try:
+        operation = getattr(self, operation_request)
+        await operation(operation_request)
+    except AttributeError:
+        raise HTTPException(
+            status_code=400, detail="Invalid Operation"
+        )
     if operation == "rainbow_cycle_loop":
-        led_strip.rainbow_cycle_loop
+        led_strip.rainbow_cycle_loop()
         return Response(status_code=200)
 
     if operation == "rainbow_loop":
-        led_strip.rainbow_loop
+        led_strip.rainbow_loop()
         return Response(status_code=200)
-        
-    else:
-        return Response(status_code=400)
+
 
     
