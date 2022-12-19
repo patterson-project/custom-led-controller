@@ -1,4 +1,4 @@
-FROM python:buster
+FROM python:3.10-slim-bullseye
 
 WORKDIR /app
 
@@ -7,6 +7,6 @@ RUN pip install -r requirements.txt
 
 EXPOSE 8000
 
-COPY /src/*.py ./
+COPY ./src/ ./
 
-CMD [ "python", "-u", "__init__.py"]
+ENTRYPOINT [ "python", "-u", "__main__.py" ]

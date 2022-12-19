@@ -1,0 +1,5 @@
+uvicorn
+fastapi
+motor
+rpi_ws281x
+httpx
