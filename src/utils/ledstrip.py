@@ -1,11 +1,30 @@
 import colorsys
 import multiprocessing
-from utils.color import convert_K_to_RGB, wheel
-import rpi_ws281x
 import time
+
+import rpi_ws281x
+
+from utils.color import convert_K_to_RGB, wheel
 from utils.ledstripconfig import LedStripConfig
 
+
 class LedStripController:
+    def __init__(self) -> None:
+        self.strip: rpi_ws281x.Adafruit_NeoPixel = self.led_strip_init()
+        self.sequence_process: multiprocessing.Process = None
+        self.last_rgb: tuple[int, int, int] = (255, 255, 255)
+        self.operation_callback_by_name = {
+            "on": self.on,
+            "off": self.off,
+            "hsv": self.hsv,
+            "brightness": self.brightness,
+            "temperature": self.temperature,
+            "rainbow": self.rainbow,
+            "rainbow_cycle": self.rainbow_cycle,
+        }
+        print("Controller initialization completed successfully.")
+    
+
     def led_strip_init(self) -> rpi_ws281x.Adafruit_NeoPixel:
         strip = rpi_ws281x.Adafruit_NeoPixel(
             LedStripConfig.COUNT,
