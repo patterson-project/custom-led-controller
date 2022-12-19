@@ -47,12 +47,12 @@ class LedStripController:
                 int(255 * (brightness / 100)))
             self.strip.show()
         else:
-            last_sequence = self.sequence_task.get_name()
+            last_sequence = getattr(self.sequence_task.get_name())
             await self.terminate_task()
             self.strip.setBrightness(
                 int(255 * (brightness / 100)))
             self.strip.show()
-            self.operation_callback_by_name[last_sequence]()
+            await last_sequence()
 
 
     async def temperature(self, temperature: int):
