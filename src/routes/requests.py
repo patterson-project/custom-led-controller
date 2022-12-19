@@ -27,7 +27,7 @@ async def strip_off():
     path="/temperature", summary="Setting a temperature", response_description="Temperature Set"
 )
 async def strip_set_temperature(temperature: TemperatureDto):
-    await led_strip.temperature(temperature=temperature)
+    await led_strip.temperature(temperature=int(temperature))
     return Response(status_code=200)
 
 
