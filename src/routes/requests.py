@@ -34,37 +34,32 @@ async def strip_set_temperature(temperature: TemperatureDto):
 @router.post(
     path="/hsv", summary="Setting a HSV", response_description="HSV Set"
 )
-async def strip_set_Hsv(Hsv: HsvDto):
-    led_strip.hsv(h=Hsv.h, s=Hsv.s, v=Hsv.v)
+async def strip_set_Hsv(hsv: HsvDto):
+    led_strip.hsv(hsv.h, hsv.s, hsv.v)
     return Response(status_code=200)
 
 
 @router.post(
     path="/brightness", summary="Setting a brightness", response_description="Brightness Set"
 )
-async def strip_set_brightness(brightness: BrightnessDto):
-    led_strip.brightness(brightness=brightness)
+async def strip_set_brightness(brightness_dto: BrightnessDto):
+    led_strip.brightness(brightness_dto.brightness)
     return Response(status_code=200)
 
 
 @router.post(
     path="/operation", summary="Setting a special operation", response_description="Operation Set"
 )
-async def strip_operation(self, operation_request: OperationDto):
+async def strip_operation(operation_request: OperationDto):
     try:
-        operation = getattr(self, operation_request)
-        await operation(operation_request)
+        operation = getattr(led_strip, operation_request.operation)
+        await operation()
+        return Response(status_code=200)
     except AttributeError:
         raise HTTPException(
-            status_code=400, detail="Invalid Operation"
+            status_code=404, detail="Invalid operation"
         )
-    if operation == "rainbow_cycle_loop":
-        led_strip.rainbow_cycle_loop()
-        return Response(status_code=200)
 
-    if operation == "rainbow_loop":
-        led_strip.rainbow_loop()
-        return Response(status_code=200)
 
 
     

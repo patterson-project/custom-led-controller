@@ -13,31 +13,24 @@ class LedStripController:
         self.strip: rpi_ws281x.Adafruit_NeoPixel = self.led_strip_init()
         self.sequence_process: multiprocessing.Process = None
         self.last_rgb: tuple[int, int, int] = (255, 255, 255)
-        self.operation_callback_by_name = {
-            "on": self.on,
-            "off": self.off,
-            "hsv": self.hsv,
-            "brightness": self.brightness,
-            "temperature": self.temperature,
-            "rainbow": self.rainbow,
-            "rainbow_cycle": self.rainbow_cycle,
-        }
-        print("Controller initialization completed successfully.")
     
 
     def led_strip_init(self) -> rpi_ws281x.Adafruit_NeoPixel:
-        strip = rpi_ws281x.Adafruit_NeoPixel(
-            LedStripConfig.COUNT,
-            LedStripConfig.PIN,
-            LedStripConfig.FREQ_HZ,
-            LedStripConfig.DMA,
-            LedStripConfig.INVERT,
-            LedStripConfig.BRIGHTNESS,
-            LedStripConfig.CHANNEL,
-        )
-        strip.begin()
-        return strip
-
+        try:    
+            strip = rpi_ws281x.Adafruit_NeoPixel(
+                LedStripConfig.COUNT,
+                LedStripConfig.PIN,
+                LedStripConfig.FREQ_HZ,
+                LedStripConfig.DMA,
+                LedStripConfig.INVERT,
+                LedStripConfig.BRIGHTNESS,
+                LedStripConfig.CHANNEL,
+            )
+            strip.begin()
+            print("Controller initialization completed successfully.")
+            return strip
+        except RuntimeError:
+            print("Controller initialization failed")
 
     def terminate_process(self) -> None:
         if self.sequence_process is not None:

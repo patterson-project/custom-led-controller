@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from src.routes.requests import router as CustomLedStripRequestRouter
+from routes.requests import router as CustomLedStripRequestRouter
 
 app = FastAPI(
     title="Custom Led Strip API",
