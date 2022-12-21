@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, Response
 
-from models.dtos import BrightnessDto, HsvDto, OperationDto, TemperatureDto
+from models.dtos import (BrightnessDto, HsvDto, OperationDto, RgbDto,
+                         TemperatureDto)
 from utils.ledstrip import LedStripController
 
 led_strip: LedStripController = LedStripController()
@@ -32,12 +33,19 @@ async def strip_set_temperature(temperature_dto: TemperatureDto):
 
 
 @router.post(
-    path="/hsv", summary="Setting a HSV", response_description="HSV Set"
+    path="/hsv", summary="Setting an HSV", response_description="HSV Set"
 )
 async def strip_set_Hsv(hsv_dto: HsvDto):
     await led_strip.hsv(hsv_dto.h, hsv_dto.s, hsv_dto.v)
     return Response(status_code=200)
 
+
+@router.post(
+    path="/rgb", summary="Setting an RGB", response_description="RGB Set"
+)
+async def strip_set_Rgb(rgb_dto: RgbDto):
+    await led_strip.rgb(rgb_dto.r, rgb_dto.g, rgb_dto.b)
+    return Response(status_code=200)
 
 @router.post(
     path="/brightness", summary="Setting a brightness", response_description="Brightness Set"

@@ -33,6 +33,7 @@ class LedStripController:
         except RuntimeError:
             print("Controller initialization failed")
 
+
     async def terminate_task(self) -> None:
         if self.sequence_task is not None:
             self.sequence_cancel_task.clear()
@@ -95,6 +96,13 @@ class LedStripController:
         self.strip.show()
         self.sequence_task.set_name("HSV")
 
+
+    async def rgb(self, r:int, g:int, b:int):
+        await self.terminate_task()
+        for i in range(self.strip.numPixels()):
+            self.strip.setPixelColorRGB(i, r, b, g)
+        self.strip.show()
+        self.sequence_task.set_name("RGB")
 
 
     async def rainbow(self) -> None:
