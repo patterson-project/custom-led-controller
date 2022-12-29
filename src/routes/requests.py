@@ -44,7 +44,7 @@ async def strip_set_Hsv(hsv_dto: HsvDto):
     path="/rgb", summary="Setting an RGB", response_description="RGB Set"
 )
 async def strip_set_Rgb(rgb_dto: RgbDto):
-    await led_strip.rgb(rgb_dto.r, rgb_dto.g, rgb_dto.b)
+    await led_strip.rgb(rgb_dto.rgb_color[0], rgb_dto.rgb_color[1], rgb_dto.rgb_color[2])
     return Response(status_code=200)
 
 @router.post(
