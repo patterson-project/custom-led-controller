@@ -44,7 +44,7 @@ async def strip_set_Hsv(hsv_dto: HsvDto):
     path="/rgb", summary="Setting an RGB", response_description="RGB Set"
 )
 async def strip_set_Rgb(rgb_dto: RgbDto):
-    rounded_rgb_dto = [round(value) for value in rgb_dto.rgb_color]
+    rounded_rgb_dto = [int(round(value)) for value in rgb_dto.rgb_color]
     await led_strip.rgb(rounded_rgb_dto[0], rounded_rgb_dto[1], rounded_rgb_dto[2])
     return Response(status_code=200)
 
