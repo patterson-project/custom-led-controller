@@ -5,7 +5,7 @@ class BrightnessDto(BaseModel):
     brightness: int
 
 class RgbDto(BaseModel):
-    rgb_color: list
+    rgb_color: list[float, float, float]
 
 class HsvDto(BaseModel):
     h: int
