@@ -1,6 +1,7 @@
 import datetime
-import rpi_ws281x
 import math
+
+import rpi_ws281x
 
 
 def wheel(pos) -> rpi_ws281x.Color:
@@ -13,6 +14,19 @@ def wheel(pos) -> rpi_ws281x.Color:
         pos -= 170
         return rpi_ws281x.Color(0, pos * 3, 255 - pos * 3)
 
+
+def convert_ha_temperature(temperature):
+    if temperature < 154:
+        temperature = 154
+    elif temperature >= 400:
+        temperature = 346
+    
+    if temperature > 250:
+        final_temperature = 1960 - abs(1960 - ((temperature*10) - 540))
+    elif temperature < 250:
+        final_temperature = 1960 + abs(1960 - ((temperature*10) - 540))
+    
+    return final_temperature    
 
 def convert_K_to_RGB(colour_temperature) -> tuple[int, int, int]:
     # range check
