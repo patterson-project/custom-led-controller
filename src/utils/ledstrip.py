@@ -4,7 +4,7 @@ import time
 
 import rpi_ws281x
 
-from utils.color import convert_K_to_RGB, wheel
+from utils.color import convert_ha_temperature, convert_K_to_RGB, wheel
 from utils.ledstripconfig import LedStripConfig
 
 
@@ -58,6 +58,7 @@ class LedStripController:
 
     async def temperature(self, temperature: int):
         await self.terminate_task()
+        temperature = convert_ha_temperature(temperature)
         r, g, b = convert_K_to_RGB(temperature)
         self.last_rgb = (r, g, b)
         for i in range(self.strip.numPixels()):
