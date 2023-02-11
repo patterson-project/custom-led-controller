@@ -14,10 +14,9 @@ class LedStripController:
         self.sequence_task: asyncio.Task = None
         self.sequence_cancel_task: asyncio.Event = asyncio.Event()
         self.last_rgb: tuple[int, int, int] = (255, 255, 255)
-    
 
     def led_strip_init(self) -> rpi_ws281x.Adafruit_NeoPixel:
-        try:    
+        try:
             strip = rpi_ws281x.Adafruit_NeoPixel(
                 LedStripConfig.COUNT,
                 LedStripConfig.PIN,
@@ -33,15 +32,12 @@ class LedStripController:
         except RuntimeError:
             print("Controller initialization failed")
 
-
     async def terminate_task(self) -> None:
         if self.sequence_task is not None:
             self.sequence_cancel_task.clear()
             await self.sequence_task
             self.sequence_task = None
 
-
-    #need to fix logic behind brightness
     async def brightness(self, brightness: int):
         if self.sequence_task is None:
             self.strip.setBrightness(
@@ -55,7 +51,6 @@ class LedStripController:
             self.strip.show()
             await last_sequence()
 
-
     async def temperature(self, temperature: int):
         await self.terminate_task()
         temperature = convert_ha_temperature(temperature)
@@ -66,7 +61,6 @@ class LedStripController:
         self.strip.show()
         self.sequence_task.set_name("temperature")
 
-
     async def on(self):
         await self.terminate_task()
         for i in range(self.strip.numPixels()):
@@ -75,13 +69,11 @@ class LedStripController:
             )
         self.strip.show()
 
-
     async def off(self):
         await self.terminate_task()
         for i in range(self.strip.numPixels()):
             self.strip.setPixelColorRGB(i, 0, 0, 0)
         self.strip.show()
-
 
     async def hsv(self, h: int, s: int, v: int):
         await self.terminate_task()
@@ -97,39 +89,34 @@ class LedStripController:
         self.strip.show()
         self.sequence_task.set_name("HSV")
 
-
-    async def rgb(self, r:int, g:int, b:int):
+    async def rgb(self, r: int, g: int, b: int):
         await self.terminate_task()
         for i in range(self.strip.numPixels()):
             self.strip.setPixelColorRGB(i, r, b, g)
         self.strip.show()
         self.sequence_task.set_name("RGB")
 
-
     async def rainbow(self) -> None:
         await self.terminate_task()
         self.sequence_task = asyncio.create_task(self.rainbow_loop)
         self.sequence_task.set_name("rainbow_loop")
-
 
     async def rainbow_loop(self) -> None:
         running = True
         while running:
             for j in range(255):
                 if not self.sequence_cancel_task.is_set():
-                    running= False
+                    running = False
                     break
                 for i in range(self.strip.numPixels()):
                     self.strip.setPixelColor(i, wheel((i + j) & 255))
                 self.strip.show()
                 time.sleep(0.05)
 
-
     async def rainbow_cycle(self):
         await self.terminate_task()
         self.sequence_task = asyncio.create_task(self.rainbow_cycle_loop)
         self.sequence_task.set_name("rainbow_cycle_loop")
-
 
     async def rainbow_cycle_loop(self) -> None:
         running = True
