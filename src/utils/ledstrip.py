@@ -11,7 +11,7 @@ from utils.ledstripconfig import LedStripConfig
 class LedStripController:
     def __init__(self) -> None:
         self.strip: rpi_ws281x.Adafruit_NeoPixel = self.led_strip_init()
-        self.sequence_task: asyncio.Task = None
+        self.sequence_task: asyncio.Task
         self.sequence_cancel_task: asyncio.Event = asyncio.Event()
         self.last_rgb: tuple[int, int, int] = (255, 255, 255)
 
