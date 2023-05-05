@@ -1,10 +1,5 @@
-flask
-flask-cors
-requests
-gevent
+uvicorn
 fastapi
-
-flask-pymongo
-pymongo
-
+motor
 rpi_ws281x
+httpx

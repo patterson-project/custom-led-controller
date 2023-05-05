@@ -1,4 +1,3 @@
-
 class LedStripConfig:
     COUNT = 100
     PIN = 18
