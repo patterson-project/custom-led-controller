@@ -3,7 +3,6 @@ import colorsys
 import time
 
 import rpi_ws281x
-
 from utils.color import convert_ha_temperature, convert_K_to_RGB, wheel
 from utils.ledstripconfig import LedStripConfig
 
@@ -100,6 +99,48 @@ class LedStripController:
         await self.terminate_task()
         self.sequence_task = asyncio.create_task(self.rainbow_loop)
         self.sequence_task.set_name("rainbow_loop")
+
+    async def color(red,green,blue,white = 0):
+        return (white << 24) | (red << 16) | (green << 8) | blue
+
+    async def color_wipe(self, color):
+        for i in range(self.strip.numPixels()):
+            self.strip.setPixelColor(i, color)
+            self.strip.show()
+    
+    async def rainbow_change_task(self) -> None:
+        await self.terminate_task()
+        self.sequence_task = asyncio.create_task(self.rainbow_change)
+        self.sequence_task.set_name("rainbow_change")
+    
+    async def rainbow_change(self) -> None:
+        running = True
+        while running:
+            if not self.sequence_cancel_task.is_set():
+                running = False
+                break
+            else:
+                self.color_wipe(self.strip, self.color(255,0,0))
+                red = 255
+                green = 0
+                for green in range(0, 256, 5):
+                    self.color_wipe(self.strip, self.color(red, green, blue))
+
+                for red in range(255, 0, -5):
+                    self.color_wipe(self.strip, self.color(red, green, blue))
+
+                for blue in range(0, 256, 5):
+                    self.color_wipe(self.strip, self.color(red, green, blue))
+
+                for green in range(255, 0, -5):
+                    self.color_wipe(self.strip, self.color(red, green, blue))
+
+                for red in range(0, 256, 5):
+                    self.color_wipe(self.strip, self.color(red, green, blue))
+
+                for blue in range(255, 0, -5):
+                    self.color_wipe(self.strip, self.color(red, green, blue))
+
 
     async def rainbow_loop(self) -> None:
         running = True

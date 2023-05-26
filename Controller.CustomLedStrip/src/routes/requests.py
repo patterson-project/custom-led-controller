@@ -1,5 +1,4 @@
 from fastapi import APIRouter, HTTPException, Response
-
 from models.dtos import (BrightnessDto, HsvDto, OperationDto, RgbDto,
                          TemperatureDto)
 from utils.ledstrip import LedStripController
