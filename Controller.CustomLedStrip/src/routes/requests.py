@@ -67,3 +67,10 @@ async def strip_operation(operation_request: OperationDto):
         raise HTTPException(
             status_code=404, detail="Invalid operation"
         )
+
+@router.get(
+    path="/rainbow_change", summary="Rainbow change effect", response_description="Effect Set"
+)
+async def strip_set_rainbow_change():
+    await led_strip.rainbow_change_task()
+    return Response(status_code=200)
