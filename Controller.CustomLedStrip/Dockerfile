@@ -1,6 +1,10 @@
-FROM python:buster
+FROM python:bullseye
 
 WORKDIR /app
+
+RUN apt-get update && apt-get install
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+ENV PATH="/root/.cargo/bin:${PATH}"
 
 COPY ./requirements.txt /app/
 RUN pip install -r requirements.txt
