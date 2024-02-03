@@ -1,11 +1,14 @@
+FROM rust:1.54 as builder
+
+WORKDIR /usr/src/app
+COPY . .
+RUN cargo install --path .
+
 FROM python:bullseye
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y curl build-essential
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-ENV PATH="/root/.cargo/bin:${PATH}"
-
+COPY --from=builder /usr/local/cargo/bin/app /usr/local/bin
 COPY ./requirements.txt /app/
 RUN pip install -r requirements.txt
 
