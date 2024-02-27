@@ -1,5 +1,5 @@
+rpi-ws281x
 uvicorn
 fastapi
 motor
-rpi_ws281x
 httpx
