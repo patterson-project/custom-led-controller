@@ -1,5 +1,5 @@
 rpi-ws281x
 uvicorn
-fastapi
+fastapi==0.96.1
 motor
 httpx
