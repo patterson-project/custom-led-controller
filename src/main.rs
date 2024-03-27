@@ -1,5 +1,23 @@
 use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
-mod config 
+use serde::{Deserialize, Serialize}
+mod config;
+
+#[derive(Debug, Serialize, Deserialize)]
+struct BrightnessDto {
+    brightness: i32,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+struct HsvDto {
+    h: i32,
+    s: i32,
+    v: i32,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+struct TemperatureDto {
+    temperature: i32,
+}
 
 #[get("/")]
 async fn hello() -> impl Responder {
@@ -17,9 +35,18 @@ async fn strip_off() -> impl Responder {
     HttpResponse::Ok().body("Turning off the LED strip")
 }
 
-#[get("/temperature")]
-async fn strip_set_temperature(req_body: String) -> impl Responder {
-    HttpResponse::Ok(req_body: String).body("Setting temperature")
+#[post("/temperature")]
+async fn strip_set_temperature(mut payload: web::Payload) -> Result<HttpResponse, Error> {
+    let mut body = web::BytesMut::new();
+    while let Some(chunk) = payload.next().await {
+        let chunk = chunk?;
+        if (body.len() + chunk.len()) > MAX_SIZE {
+            return Err(error::ErrorBadRequest("overflow"));
+        }
+        body.extend_from_slice(&chunk);
+    }
+    let temp = serde_json::from_slice::<TemperatureDto>(&body)?;
+    HttpResponse::Ok().json(temp);
 }
 
 #[get("/hsv")]
