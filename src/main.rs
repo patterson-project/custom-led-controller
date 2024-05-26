@@ -51,6 +51,8 @@ async fn strip_set_brightness(mut payload: web::Payload) -> Result<HttpResponse,
     Ok(HttpResponse::Ok().body(format!("Setting brightness: {}", brightness.brightness)))
 }
 
+// WIP
+
 #[post("/hsv")]
 async fn strip_set_hsv(mut payload: web::Payload) -> Result<HttpResponse, Error> {
     let mut body = web::BytesMut::new();
