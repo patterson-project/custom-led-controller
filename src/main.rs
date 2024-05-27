@@ -64,6 +64,7 @@ async fn strip_set_hsv(mut payload: web::Payload) -> Result<HttpResponse, Error>
         body.extend_from_slice(&chunk);
     }
     let hsv = serde_json::from_slice::<HsvDto>(&body)?;
+    strip::strip_set_hsv(hsv.h, hsv.s, hsv.v);
     Ok(HttpResponse::Ok().body(format!("Setting HSV: {}, {}, {}", hsv.h, hsv.s, hsv.v)))
 }
 

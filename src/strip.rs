@@ -3,7 +3,7 @@ use rs_ws281x::ChannelBuilder;
 use rs_ws281x::StripType;
 use rs_ws281x::Controller;
 use std::sync::{Once, Mutex};
-// mod colors;
+mod colors;
 
 static INIT: Once = Once::new();
 static mut STRIP: Option<Mutex<Controller>> = None;
@@ -73,21 +73,21 @@ pub async fn strip_off () {
 
 
 
-// pub fn strip_set_hsv(h: f32, s: f32, v: f32) {
-//     let controller = unsafe {
-//         STRIP.as_ref().unwrap().lock().unwrap()
-//     };
+pub fn strip_set_hsv(h: f32, s: f32, v: f32) {
+    let mut controller = unsafe {
+        STRIP.as_ref().unwrap().lock().unwrap()
+    };
 
-//     let (r, g, b) = colors::hsv_to_rgb(h as f32 / 360.0, s as f32 / 100.0, v as f32 / 100.0);
+    let (r, g, b) = colors::hsv_to_rgb(h as f32 / 360.0, s as f32 / 100.0, v as f32 / 100.0);
 
-//     let leds = controller.leds_mut(0);
-//     for led in leds {
-//         *led = [r, g, b, 0];
-//     }
+    let leds = controller.leds_mut(0);
+    for led in leds {
+        *led = [r, g, b, 0];
+    }
 
-//     let all_leds = controller.leds(0);
-//     controller.render().unwrap();
-// }
+    let all_leds = controller.leds(0);
+    controller.render().unwrap();
+}
 
 // pub fn strip_set_temperature(temperature: i32) {
 //     let controller = unsafe {
