@@ -93,7 +93,7 @@ pub fn strip_set_hsv(h: f32, s: f32, v: f32) {
 
     let leds = controller.leds_mut(0);
     for led in leds {
-        *led = [r, g, b, 100];
+        *led = [g, r, b, 100];
     }
 
     let all_leds = controller.leds(0);
