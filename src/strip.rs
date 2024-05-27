@@ -65,14 +65,16 @@ pub async fn strip_off () {
     controller.render().unwrap();
 }
 
-// pub fn strip_set_brightness(brightness: i32) {
-//     let controller = unsafe {
-//         STRIP.as_ref().unwrap().lock().unwrap()
-//     };
+pub fn strip_set_brightness(brightness: i32) {
+    let mut controller = unsafe {
+        STRIP.as_ref().unwrap().lock().unwrap()
+    };
 
-//     controller.set_brightness(0, brightness);
-//     controller.render().unwrap();
-// }
+    let u_brightness = brightness as u8;
+
+    controller.set_brightness(0,u_brightness);
+    controller.render().unwrap();
+}
 
 
 
@@ -83,7 +85,6 @@ pub fn strip_set_hsv(h: f32, s: f32, v: f32) {
 
     let hex_color = Hsl::from(h,s,v);
     let rgb = hex_color.to_rgb();
-    // let (r, g, b) = colors::hsv_to_rgb(h as f32 / 360.0, s as f32 / 100.0, v as f32 / 100.0);
 
     let r = rgb.get_red() as u8;
     let g = rgb.get_green() as u8;
