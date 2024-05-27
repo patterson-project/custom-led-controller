@@ -4,6 +4,9 @@ use rs_ws281x::StripType;
 use rs_ws281x::Controller;
 use std::sync::{Once, Mutex};
 mod colors;
+use colors_transform::Hsl;
+use colors_transform::Color;
+use colors_transform::Rgb;
 
 static INIT: Once = Once::new();
 static mut STRIP: Option<Mutex<Controller>> = None;
@@ -78,11 +81,17 @@ pub fn strip_set_hsv(h: f32, s: f32, v: f32) {
         STRIP.as_ref().unwrap().lock().unwrap()
     };
 
-    let (r, g, b) = colors::hsv_to_rgb(h as f32 / 360.0, s as f32 / 100.0, v as f32 / 100.0);
+    let hex_color = Hsl::from(h,s,v);
+    let rgb = hex_color.to_rgb();
+    // let (r, g, b) = colors::hsv_to_rgb(h as f32 / 360.0, s as f32 / 100.0, v as f32 / 100.0);
+
+    let r = rgb.get_red() as u8;
+    let g = rgb.get_green() as u8;
+    let b = rgb.get_blue() as u8;
 
     let leds = controller.leds_mut(0);
     for led in leds {
-        *led = [r, g, b, 0];
+        *led = [r, g, b, 100];
     }
 
     let all_leds = controller.leds(0);
