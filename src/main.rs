@@ -48,6 +48,7 @@ async fn strip_set_brightness(mut payload: web::Payload) -> Result<HttpResponse,
         body.extend_from_slice(&chunk);
     }
     let brightness = serde_json::from_slice::<BrightnessDto>(&body)?;
+    strip::strip_set_brightness(brightness.brightness);
     Ok(HttpResponse::Ok().body(format!("Setting brightness: {}", brightness.brightness)))
 }
 
