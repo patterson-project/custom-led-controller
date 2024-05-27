@@ -89,6 +89,8 @@ pub fn strip_set_hsv(h: f32, s: f32, v: f32) {
     let g = rgb.get_green() as u8;
     let b = rgb.get_blue() as u8;
 
+    println!("Setting color to: {}, {}, {}", r, g, b);
+
     let leds = controller.leds_mut(0);
     for led in leds {
         *led = [r, g, b, 100];
