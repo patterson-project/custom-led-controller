@@ -1,24 +1,5 @@
 use std::f32::consts::E;
 
-pub fn hsv_to_rgb(h: f32, s: f32, v: f32) -> (u8, u8, u8) {
-    let h = h % 360.0;
-    let h = if h < 0.0 { h + 360.0 } else { h };
-    let h = h / 60.0;
-    let i = h.floor();
-    let f = h - i;
-    let p = v * (1.0 - s);
-    let q = v * (1.0 - s * f);
-    let t = v * (1.0 - s * (1.0 - f));
-    match i as i32 {
-        0 => ((v * 255.0) as u8, (t * 255.0) as u8, (p * 255.0) as u8),
-        1 => ((q * 255.0) as u8, (v * 255.0) as u8, (p * 255.0) as u8),
-        2 => ((p * 255.0) as u8, (v * 255.0) as u8, (t * 255.0) as u8),
-        3 => ((p * 255.0) as u8, (q * 255.0) as u8, (v * 255.0) as u8),
-        4 => ((t * 255.0) as u8, (p * 255.0) as u8, (v * 255.0) as u8),
-        _ => ((v * 255.0) as u8, (p * 255.0) as u8, (q * 255.0) as u8),
-    }
-}
-
 
 pub fn convert_ha_temperature(mut temperature: i32) -> i32 {
     if temperature < 154 {

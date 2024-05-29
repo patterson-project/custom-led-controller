@@ -52,8 +52,6 @@ async fn strip_set_brightness(mut payload: web::Payload) -> Result<HttpResponse,
     Ok(HttpResponse::Ok().body(format!("Setting brightness: {}", brightness.brightness)))
 }
 
-// WIP
-
 #[post("/hsv")]
 async fn strip_set_hsv(mut payload: web::Payload) -> Result<HttpResponse, Error> {
     let mut body = web::BytesMut::new();
@@ -80,6 +78,7 @@ async fn strip_set_temperature(mut payload: web::Payload) -> Result<HttpResponse
         body.extend_from_slice(&chunk);
     }
     let temperature = serde_json::from_slice::<TemperatureDto>(&body)?;
+    strip::strip_set_temperature(temperature.temperature);
     Ok(HttpResponse::Ok().body(format!("Setting temperature: {}", temperature.temperature)))
 }
 

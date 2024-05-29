@@ -47,7 +47,6 @@ pub async fn strip_on() {
         *led = [0, 0, 255, 0];
     }
 
-    // let all_leds = controller.leds(0);
     controller.render().unwrap();
 }
 
@@ -61,7 +60,6 @@ pub async fn strip_off () {
         *led = [0, 0, 0, 0];
     }
 
-    // let all_leds = controller.leds(0);
     controller.render().unwrap();
 }
 
@@ -101,21 +99,21 @@ pub fn strip_set_hsv(h: f32, s: f32, v: f32) {
     controller.render().unwrap();
 }
 
-// pub fn strip_set_temperature(temperature: i32) {
-//     let controller = unsafe {
-//         STRIP.as_ref().unwrap().lock().unwrap()
-//     };
+pub fn strip_set_temperature(temperature: i32) {
+    let mut controller = unsafe {
+        STRIP.as_ref().unwrap().lock().unwrap()
+    };
 
-//     let r,g,b = colors::convert_k_to_rgb(colors::convert_ha_temperature(temperature));
+    let (r,g,b) = colors::convert_k_to_rgb(colors::convert_ha_temperature(temperature));
 
-//     let leds = controller.leds_mut(0);
-//     for led in leds {
-//         *led = [r, g, b, 0];
-//     }
+    let leds = controller.leds_mut(0);
+    for led in leds {
+        *led = [g, b, r, 100];
+    }
 
-//     let all_leds = controller.leds(0);
-//     controller.render().unwrap();
-// }
+    let all_leds = controller.leds(0);
+    controller.render().unwrap();
+}
 
 
 // pub fn main() {
