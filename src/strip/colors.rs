@@ -1,5 +1,3 @@
-use std::f32::consts::E;
-
 
 pub fn convert_ha_temperature(mut temperature: i32) -> i32 {
     if temperature < 154 {
