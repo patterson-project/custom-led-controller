@@ -1,5 +1,0 @@
-rpi-ws281x
-uvicorn
-fastapi==0.96.1
-motor
-httpx
