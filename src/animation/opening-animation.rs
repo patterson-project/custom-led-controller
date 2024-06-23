@@ -2,7 +2,6 @@ use rs_ws281x::ControllerBuilder;
 use rs_ws281x::ChannelBuilder;
 use rs_ws281x::StripType;
 use rs_ws281x::Controller;
-use rand::{thread_rng, Rng};
 
 pub fn main() {
     let mut controller = ControllerBuilder::new()
@@ -20,7 +19,6 @@ pub fn main() {
     )
     .build()
     .unwrap();
-
 
     let led_count = controller.leds_mut(0).len();
     let custom_mid_point = 60; // Custom midpoint, can be set dynamically
@@ -94,68 +92,5 @@ pub fn main() {
             controller.render().unwrap();
             std::thread::sleep(std::time::Duration::from_millis(30)); // Adjust speed
         }
-    }
-
-    // Phase 4: Starry Night
-    // Initialize a vector to track the state and duration of each LED
-    let mut led_states = vec![(0, 0); led_count]; // (brightness, duration)
-
-    for _ in 0..50 { // Run the animation for 50 iterations
-        let leds = controller.leds_mut(0);
-
-        // Update LED states based on their remaining duration
-        for (i, led) in leds.iter_mut().enumerate() {
-            if led_states[i].1 > 0 {
-                // If the LED has remaining duration, decrease it
-                led_states[i].1 -= 1;
-                *led = [led_states[i].0, led_states[i].0, led_states[i].0, 0];
-            } else {
-                // Turn off the LED if its duration has elapsed
-                *led = [0, 0, 0, 0];
-            }
-        }
-
-        // Randomly select a new LED to light up
-        let led_index = thread_rng().gen_range(0..led_count);
-        // Use a weighted approach for brightness to favor lower values and more off LEDs
-        let brightness = if thread_rng().gen_bool(0.3) { // 30% chance to light up an LED
-            thread_rng().gen_range(1..=255)
-        } else {
-            0 // Most LEDs stay off
-        };
-
-        if brightness > 0 {
-            // Light up the new LED and set its duration
-            leds[led_index] = [brightness, brightness, brightness, 0];
-            led_states[led_index] = (brightness, 5); // Keep the LED on for 5 iterations
-        }
-
-        controller.render().unwrap();
-        std::thread::sleep(std::time::Duration::from_millis(100)); // Testing speed, adjust to 500ms for slower, calming effect
-    }
-
-    // Phase 5: Aurora Borealis
-    for _ in 0..20 { // Run the animation for 50 iterations
-        let leds = controller.leds_mut(0);
-        for i in 0..led_count {
-            let color = match i % 3 {
-                0 => [0, 255, 0, 0], // Green
-                1 => [0, 0, 255, 0], // Blue
-                _ => [128, 0, 128, 0], // Purple
-            };
-            leds[i] = color;
-        }
-        controller.render().unwrap();
-        std::thread::sleep(std::time::Duration::from_millis(200)); // Testing speed, adjust to 1000ms for slower, mesmerizing effect
-    }
-
-    // Phase 7: Sunrise Simulation
-    for brightness in 1..=255 {
-        let leds = controller.leds_mut(0);
-        for led in leds.iter_mut() {
-            *led = [(brightness / 2) as u8, (brightness / 4) as u8, 0, 0]; // Dark red to bright yellow
-        }
-        controller.render().unwrap();
-        std::thread::sleep(std::time::Duration::from_millis(50)); // Testing speed, adjust to 100ms for a slower sunrise effect
     }
 }

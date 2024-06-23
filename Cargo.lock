@@ -430,6 +430,7 @@ dependencies = [
  "actix-web",
  "colors-transform",
  "futures",
+ "rand",
  "rs_ws281x",
  "serde",
  "serde_json",

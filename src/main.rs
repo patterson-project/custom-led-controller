@@ -82,6 +82,13 @@ async fn strip_set_temperature(mut payload: web::Payload) -> Result<HttpResponse
     Ok(HttpResponse::Ok().body(format!("Setting temperature: {}", temperature.temperature)))
 }
 
+#[get("/animation/{id}")]
+async fn start_animation(path: web::Path<u8>) -> impl Responder {
+    let animation_id = path.into_inner();
+    strip::start_animation(animation_id);
+    HttpResponse::Ok().body(format!("Starting animation: {}", animation_id))
+}
+
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -93,6 +100,7 @@ async fn main() -> std::io::Result<()> {
             .service(strip_set_brightness)
             .service(strip_set_hsv)
             .service(strip_set_temperature)
+            .service(start_animation)
     })
     .bind(("0.0.0.0", 8080))?
     .run()

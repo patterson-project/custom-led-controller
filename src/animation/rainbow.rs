@@ -44,8 +44,6 @@ pub fn main() {
             controller.leds_mut(0)[i] = color;
         }
 
-        // Render and wait
-        println!("Current color: R: {}, G: {}, B: {}", color[0], color[1], color[2]);
         controller.render().unwrap();
         std::thread::sleep(std::time::Duration::from_millis(50)); // Adjust for desired speed
 
