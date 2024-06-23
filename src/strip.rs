@@ -108,26 +108,63 @@ pub fn sunrise() {
 pub fn aurora_borealis() {
     thread::spawn(move || {
         while ANIMATION_RUNNING.load(Ordering::SeqCst) {
+            // Initialize all LEDs to off within a separate scope
             let mut controller = unsafe {
                 STRIP.as_ref().unwrap().lock().unwrap()
             };
+            {
+                let leds = controller.leds_mut(0);
+                for led in leds.iter_mut() {
+                    *led = [0, 0, 0, 0];
+                }
+            } // Mutable borrow of `controller` through `leds` ends here
 
-            let led_count = controller.leds_mut(0).len();
-            let leds = controller.leds_mut(0);
-            for i in 0..led_count {
-                let color = match i % 3 {
-                    0 => [0, 255, 0, 0], // Green
-                    1 => [0, 0, 255, 0], // Blue
-                    _ => [128, 0, 128, 0], // Purple
-                };
-                leds[i] = color;
+            let start_index = thread_rng().gen_range(0..led_count - 20); // Ensure there's room for 5 LEDs
+            let color = match thread_rng().gen_range(0..3) {
+                0 => [255, 0, 0, 0], // Green
+                1 => [0, 255, 0, 0], // Blue
+                _ => [0, 128, 128, 0], // Purple
+            };
+
+            // Fade in the spot
+            for brightness in 1..=10 {
+                {
+                    let leds = controller.leds_mut(0);
+                    for i in 0..5 {
+                        leds[start_index + i] = [
+                            (color[0] * brightness / 10) as u8,
+                            (color[1] * brightness / 10) as u8,
+                            (color[2] * brightness / 10) as u8,
+                            0,
+                        ];
+                    }
+                } // Mutable borrow of `controller` through `leds` ends here
+                if !ANIMATION_RUNNING.load(Ordering::SeqCst) {
+                    return;
+                }
+                controller.render().unwrap();
+                std::thread::sleep(std::time::Duration::from_millis(100));
             }
-            if !ANIMATION_RUNNING.load(Ordering::SeqCst) {
-                return;
+
+            // Hold the maximum brightness for a short duration
+            std::thread::sleep(std::time::Duration::from_millis(500));
+
+            // Fade out the spot
+            for brightness in (1..=10).rev() {
+                {
+                    let leds = controller.leds_mut(0);
+                    for i in 0..5 {
+                        leds[start_index + i] = [
+                            (color[0] * brightness / 10) as u8,
+                            (color[1] * brightness / 10) as u8,
+                            (color[2] * brightness / 10) as u8,
+                            0,
+                        ];
+                    }
+                } // Mutable borrow of `controller` through `leds` ends here
+                controller.render().unwrap();
+                std::thread::sleep(std::time::Duration::from_millis(100));
             }
-            controller.render().unwrap();
-            std::thread::sleep(std::time::Duration::from_millis(1000)); // Testing speed, adjust to 1000ms for slower, mesmerizing effect
-            
         }
     });
 }

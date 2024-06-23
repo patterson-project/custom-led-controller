@@ -21,17 +21,56 @@ pub fn main() {
     .build()
     .unwrap();
 
-    for _ in 0..20 { // Run the animation for 50 iterations
-        let leds = controller.leds_mut(0);
-        for i in 0..led_count {
-            let color = match i % 3 {
-                0 => [0, 255, 0, 0], // Green
-                1 => [0, 0, 255, 0], // Blue
-                _ => [128, 0, 128, 0], // Purple
-            };
-            leds[i] = color;
+    for _ in 0..20 { // Run the animation for 20 iterations
+        // Initialize all LEDs to off within a separate scope
+        {
+            let leds = controller.leds_mut(0);
+            for led in leds.iter_mut() {
+                *led = [0, 0, 0, 0];
+            }
+        } // Mutable borrow of `controller` through `leds` ends here
+    
+        let start_index = thread_rng().gen_range(0..led_count - 20); // Ensure there's room for 5 LEDs
+        let color = match thread_rng().gen_range(0..3) {
+            0 => [255, 0, 0, 0], // Green
+            1 => [0, 255, 0, 0], // Blue
+            _ => [0, 128, 128, 0], // Purple
+        };
+    
+        // Fade in the spot
+        for brightness in 1..=10 {
+            {
+                let leds = controller.leds_mut(0);
+                for i in 0..5 {
+                    leds[start_index + i] = [
+                        (color[0] * brightness / 10) as u8,
+                        (color[1] * brightness / 10) as u8,
+                        (color[2] * brightness / 10) as u8,
+                        0,
+                    ];
+                }
+            } // Mutable borrow of `controller` through `leds` ends here
+            controller.render().unwrap();
+            std::thread::sleep(std::time::Duration::from_millis(100));
         }
-        controller.render().unwrap();
-        std::thread::sleep(std::time::Duration::from_millis(200)); // Testing speed, adjust to 1000ms for slower, mesmerizing effect
-    }
+    
+        // Hold the maximum brightness for a short duration
+        std::thread::sleep(std::time::Duration::from_millis(500));
+    
+        // Fade out the spot
+        for brightness in (1..=10).rev() {
+            {
+                let leds = controller.leds_mut(0);
+                for i in 0..5 {
+                    leds[start_index + i] = [
+                        (color[0] * brightness / 10) as u8,
+                        (color[1] * brightness / 10) as u8,
+                        (color[2] * brightness / 10) as u8,
+                        0,
+                    ];
+                }
+            } // Mutable borrow of `controller` through `leds` ends here
+            controller.render().unwrap();
+            std::thread::sleep(std::time::Duration::from_millis(100));
+        }
 }
