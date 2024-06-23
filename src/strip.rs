@@ -118,6 +118,7 @@ pub fn aurora_borealis() {
                     *led = [0, 0, 0, 0];
                 }
             } // Mutable borrow of `controller` through `leds` ends here
+            let led_count = controller.leds_mut(0).len();
 
             let start_index = thread_rng().gen_range(0..led_count - 20); // Ensure there's room for 5 LEDs
             let color = match thread_rng().gen_range(0..3) {
