@@ -1,0 +1,70 @@
+rest_command:
+  strip_on:
+    url: http://10.0.0.64:8080/on
+    method: get
+    content_type: application/json
+  strip_off:
+    url: http://10.0.0.64:8080/off
+    method: get
+    content_type: application/json
+  strip_set_temperature:
+    url: http://10.0.0.64:8080/temperature
+    method: post
+    content_type: application/json
+    payload: '{ "temperature": {{ temperature }} }'
+  strip_set_brightness:
+    url: http://10.0.0.64:8080/brightness
+    method: post
+    content_type: application/json
+    payload: '{ "brightness": {{ brightness }} }'
+  strip_set_hsv:
+    url: http://10.0.0.64:8080/hsv
+    method: post
+    content_type: application/json
+    payload: '{ "h": {{ h }}, "s": {{ s }}, "v": 50 }'
+  strip_sunrise:
+    url: http://10.0.0.64:8080/animation/1
+    method: get
+    content_type: application/json
+  strip_aurora_borealis:
+    url: http://10.0.0.64:8080/animation/2
+    method: get
+    content_type: application/json
+  strip_opening:
+    url: http://10.0.0.64:8080/animation/3
+    method: get
+    content_type: application/json
+  strip_starry_night:
+    url: http://10.0.0.64:8080/animation/4
+    method: get
+    content_type: application/json
+  strip_rainbow:
+    url: http://10.0.0.64:8080/animation/5
+    method: get
+    content_type: application/json
+
+light:
+  - platform: template
+    lights:
+      bed_strip:
+        friendly_name: "Bed Strip"
+        turn_off:
+          service: rest_command.strip_off
+        turn_on:
+          - service: rest_command.strip_on
+          - service: rest_command.strip_set_brightness
+            data:
+              brightness: "{{ 127.5/2.55 }}"
+        set_temperature:
+          service: rest_command.strip_set_temperature
+          data:
+            temperature: "{{ color_temp }}"
+        set_level:
+          service: rest_command.strip_set_brightness
+          data:
+            brightness: "{{ brightness }}"
+        set_color:
+          service: rest_command.strip_set_hsv
+          data:
+            h: "{{ h }}"
+            s: "{{ s }}"
