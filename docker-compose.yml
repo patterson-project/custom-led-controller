@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+  custom-led-controller:
+    privileged: true
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    restart: unless-stopped

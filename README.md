@@ -18,7 +18,7 @@ A custom LED controller written for the WS281x family of controllable LED strips
 
 ### Repository:
 
-- Clone this repository and `cd custom-led-controller/Controller.CustomLedStrip` into it
+- Clone this repository and `cd custom-led-controller`
 - Run `docker compose up`
   - If it's the first time running this, it will take a while to install all the neccessary components
 
@@ -26,11 +26,11 @@ A custom LED controller written for the WS281x family of controllable LED strips
 
 ### Starting the container:
 
-- Run `docker compose up` in `custom-led-controller/Controller.CustomLedStrip`
+- Run `docker compose up` in `custom-led-controller`
 
 ### Reinitializing the container:
 
-- Run `docker compose build` in `custom-led-controller/Controller.CustomLedStrip`
+- Run `docker compose build` in `custom-led-controller`
 
 ### Stopping the container:
 
